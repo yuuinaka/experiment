@@ -1,3 +1,3 @@
 experiment
 ==========
-git test2
+experiment project dir.
