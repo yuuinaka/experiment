@@ -1,0 +1,8 @@
+// 複数行に対応したテキスト省略
+// Androidの下位機種は未対応（未確認）
+@mixin ellipsis($lines: 1){
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: $lines;
+}
