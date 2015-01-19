@@ -1,6 +1,8 @@
 
 // ToDo
+// 迷路が出来ていく過程
 // 高速化・リファクタリング・TSに最適化
+// クリックで出口までの経路表示 先に答えを用意しておく 入口から反対側の壁をランダムで辿って出口を設定するように
 
 window.onload = () => new maze.Main();
 
@@ -11,9 +13,9 @@ module maze {
     public stage;
 
     public maze;
-    public maze_cols = 15;
-    public maze_rows = 15;
-    public maze_unit = 20;
+    public maze_cols = 50;
+    public maze_rows = 50;
+    public maze_unit = 10;
     public maze_rooms = this.maze_cols * this.maze_rows;
 
     public constructor() {
@@ -21,85 +23,67 @@ module maze {
       this.stage = new Stage("mazeCanvas");
 
       this.maze = new Array(this.maze_rooms);
+
       var px = 0, py = 0;
+
       for(var i = 0; i < this.maze_rooms; i++) {
-        if (i%this.maze_cols === 0) {
+
+        if (i%this.maze_cols == 0) {
           px = 0;
           py += this.maze_unit;
         }
+
         this.maze[i] = new Room(i, px, py, this.maze_unit, this.stage.ctx);
-        this.maze[i].buildRoom();
         px += this.maze_unit;
+
       }
 
-      // 壁を壊す
-      var cnt = 0;
-      var maze_building = true;
+      this.mazeBuild();
+
+    }
+
+    public mazeBuild() {
+
       // 入口と出口の作成
+      // 入口は上か左かの2パターンを用意
+      var rd = Math.floor(Math.random() * 2);
+
+      // 壁を壊す
+      switch (rd) {
+
+        // 上下パターン
+        case 0:
+          // 入口は最上段の中から壊す
+          var rr = Math.floor(Math.random() * this.maze_rows);
+          if (this.maze[rr].direct[0]) {
+            this.maze[rr].direct[0] = 0;
+          }
+        break;
+
+        // 左右のパターン
+        case 1:
+          // 入口は最左段の中から壊す
+          var rr = Math.floor(Math.random() * this.maze_rows) * this.maze_rows;
+          if (this.maze[rr].direct[3]) { 
+            this.maze[rr].direct[3] = 0;
+          }
+        break;
+
+      }
+
+      // ToDo 経路の作成 反対側の壁までのidxを0にしていく。
+      var maze_building = true;
       while (maze_building) {
-
-        var rd = Math.floor(Math.random() * 4);
-
-        switch (rd) {
-
-          // 上壁の場合
-          case 0:
-            // 最上段の中から壊す
-            var rr = Math.floor(Math.random() * this.maze_rows);
-            if (this.maze[rr].direct[0]) {
-              this.maze[rr].direct[0] = 0;
-              cnt++;
-            }
-          break;
-
-          // 右壁の場合
-          case 1:
-            // 最右段の中から壊す
-            var rr = Math.floor(Math.random() * this.maze_rows) * this.maze_rows - 1 + this.maze_rows;
-            if (this.maze[rr].direct[1]) { 
-              this.maze[rr].direct[1] = 0;
-              cnt++;
-            }
-          break;
-
-          // 下壁の場合
-          case 2:
-            // 最下段の中から壊す
-            var rr = this.maze_rooms - 1 - Math.floor(Math.random() * this.maze_rows);
-            if (this.maze[rr].direct[2]) { 
-              this.maze[rr].direct[2] = 0;
-              cnt++;
-            }
-          break;
-
-          // 左壁の場合
-          case 3:
-            // 最左段の中から壊す
-            var rr = Math.floor(Math.random() * this.maze_rows) * this.maze_rows;
-            if (this.maze[rr].direct[3]) { 
-              this.maze[rr].direct[3] = 0;
-              cnt++;
-            }
-          break;
-
-        }
-
-        if (cnt == 2) {
-          maze_building = false;
-        }
-
+        maze_building = false;
       }
 
       // 端以外の壁を壊す
-      cnt = 0;
       maze_building = true;
       while (maze_building) {
 
         // ランダムな部屋のランダムな方角の壁を壊す
         var rd = Math.floor(Math.random() * 4);
         var rr = Math.floor(Math.random() * this.maze_rooms);
-
-        // console.log(cnt++);
 
         // 壁があるか
         if (this.maze[rr].direct[rd]) {
@@ -171,17 +155,18 @@ module maze {
 
         }
 
-        // 再描写
         maze_building = false;
-        this.stage.ctx.clearRect(0, 0, 4000, 4000);
         for(var i = 0; i < this.maze_rooms; i++) {
-          this.maze[i].buildRoom();
-          if (this.maze[i].idx > 0) {
-            // クラスタリングが完了する(全部の部屋が繋がる)までループ
-            maze_building = true;
-          }
+          // this.maze[i].buildRoom();
+          // クラスタリングが完了する(全部の部屋が繋がる)までループ
+          if (this.maze[i].idx > 0) maze_building = true;
         }
 
+      }
+
+      // 再描写
+      for(var i = 0; i < this.maze_rooms; i++) {
+        this.maze[i].buildRoom();
       }
 
     }
@@ -204,10 +189,8 @@ module maze {
     public ctx;
 
     public constructor(canvasId) {
-
       this.stage = document.getElementById(canvasId);
       this.ctx = this.stage.getContext("2d");
-
     }
 
   }
