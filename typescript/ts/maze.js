@@ -44,85 +44,76 @@ var maze;
                     }
                     break;
             }
-            // ToDo 経路の作成 反対側の壁までのidxを0にしていく。
-            var maze_building = true;
-            while (maze_building) {
-                maze_building = false;
-            }
+            window.requestAnimationFrame(this.mazeBuilding.bind(this));
+        };
+        Main.prototype.mazeBuilding = function () {
             // 端以外の壁を壊す
-            maze_building = true;
-            while (maze_building) {
-                // ランダムな部屋のランダムな方角の壁を壊す
-                var rd = Math.floor(Math.random() * 4);
-                var rr = Math.floor(Math.random() * this.maze_rooms);
-                // 壁があるか
-                if (this.maze[rr].direct[rd]) {
-                    switch (rd) {
-                        case 0:
-                            // 最上段以外 上の列の下壁が存在するのでそれも壊す
-                            if (rr > this.maze_rows) {
-                                // すでに繋がっていないかどうか
-                                if (this.maze[rr].idx != this.maze[rr - this.maze_rows].idx) {
-                                    // 繋がってなければ隣り合う壁と共に壊す
-                                    this.maze[rr].direct[0] = 0;
-                                    this.maze[rr - this.maze_rows].direct[2] = 0;
-                                    // 繋がった部屋を小さい方の値でクラスタリング
-                                    this.clustering(this.maze[rr].idx, this.maze[rr - this.maze_rows].idx);
-                                }
+            // ランダムな部屋のランダムな方角の壁を壊す
+            var rd = Math.floor(Math.random() * 4);
+            var rr = Math.floor(Math.random() * this.maze_rooms);
+            // 壁があるか
+            if (this.maze[rr].direct[rd]) {
+                switch (rd) {
+                    case 0:
+                        // 最上段以外 上の列の下壁が存在するのでそれも壊す
+                        if (rr > this.maze_rows) {
+                            // すでに繋がっていないかどうか
+                            if (this.maze[rr].idx != this.maze[rr - this.maze_rows].idx) {
+                                // 繋がってなければ隣り合う壁と共に壊す
+                                this.maze[rr].direct[0] = 0;
+                                this.maze[rr - this.maze_rows].direct[2] = 0;
+                                // 繋がった部屋を小さい方の値でクラスタリング
+                                this.clustering(this.maze[rr].idx, this.maze[rr - this.maze_rows].idx);
                             }
-                            break;
-                        case 1:
-                            // 最右段以外 右の列の左壁が存在するのでそれも壊す
-                            if (rr % this.maze_rows != this.maze_rows - 1) {
-                                // すでに繋がっていないかどうか
-                                if (this.maze[rr].idx != this.maze[rr + 1].idx) {
-                                    // 繋がってなければ隣り合う壁と共に壊す
-                                    this.maze[rr].direct[1] = 0;
-                                    this.maze[rr + 1].direct[3] = 0;
-                                    // 繋がった部屋を小さい方の値でクラスタリング
-                                    this.clustering(this.maze[rr].idx, this.maze[rr + 1].idx);
-                                }
+                        }
+                        break;
+                    case 1:
+                        // 最右段以外 右の列の左壁が存在するのでそれも壊す
+                        if (rr % this.maze_rows != this.maze_rows - 1) {
+                            // すでに繋がっていないかどうか
+                            if (this.maze[rr].idx != this.maze[rr + 1].idx) {
+                                // 繋がってなければ隣り合う壁と共に壊す
+                                this.maze[rr].direct[1] = 0;
+                                this.maze[rr + 1].direct[3] = 0;
+                                // 繋がった部屋を小さい方の値でクラスタリング
+                                this.clustering(this.maze[rr].idx, this.maze[rr + 1].idx);
                             }
-                            break;
-                        case 2:
-                            // 最下段以外 下の列の上壁が存在するのでそれも壊す
-                            if (rr < this.maze_rooms - this.maze_rows) {
-                                // すでに繋がっていないかどうか
-                                if (this.maze[rr].idx != this.maze[rr + this.maze_rows].idx) {
-                                    // 繋がってなければ隣り合う壁と共に壊す
-                                    this.maze[rr].direct[2] = 0;
-                                    this.maze[rr + this.maze_rows].direct[0] = 0;
-                                    // 繋がった部屋を小さい方の値でクラスタリング
-                                    this.clustering(this.maze[rr].idx, this.maze[rr + this.maze_rows].idx);
-                                }
+                        }
+                        break;
+                    case 2:
+                        // 最下段以外 下の列の上壁が存在するのでそれも壊す
+                        if (rr < this.maze_rooms - this.maze_rows) {
+                            // すでに繋がっていないかどうか
+                            if (this.maze[rr].idx != this.maze[rr + this.maze_rows].idx) {
+                                // 繋がってなければ隣り合う壁と共に壊す
+                                this.maze[rr].direct[2] = 0;
+                                this.maze[rr + this.maze_rows].direct[0] = 0;
+                                // 繋がった部屋を小さい方の値でクラスタリング
+                                this.clustering(this.maze[rr].idx, this.maze[rr + this.maze_rows].idx);
                             }
-                            break;
-                        case 3:
-                            // 最左段以外 左の列の右壁が存在するのでそれも壊す
-                            if (rr > 0 && rr % this.maze_rows != 0) {
-                                // すでに繋がっていないかどうか
-                                if (this.maze[rr].idx != this.maze[rr - 1].idx) {
-                                    // 繋がってなければ隣り合う壁と共に壊す
-                                    this.maze[rr].direct[3] = 0;
-                                    this.maze[rr - 1].direct[1] = 0;
-                                    // 繋がった部屋を小さい方の値でクラスタリング
-                                    this.clustering(this.maze[rr].idx, this.maze[rr - 1].idx);
-                                }
+                        }
+                        break;
+                    case 3:
+                        // 最左段以外 左の列の右壁が存在するのでそれも壊す
+                        if (rr > 0 && rr % this.maze_rows != 0) {
+                            // すでに繋がっていないかどうか
+                            if (this.maze[rr].idx != this.maze[rr - 1].idx) {
+                                // 繋がってなければ隣り合う壁と共に壊す
+                                this.maze[rr].direct[3] = 0;
+                                this.maze[rr - 1].direct[1] = 0;
+                                // 繋がった部屋を小さい方の値でクラスタリング
+                                this.clustering(this.maze[rr].idx, this.maze[rr - 1].idx);
                             }
-                            break;
-                    }
-                }
-                maze_building = false;
-                for (var i = 0; i < this.maze_rooms; i++) {
-                    // this.maze[i].buildRoom();
-                    // クラスタリングが完了する(全部の部屋が繋がる)までループ
-                    if (this.maze[i].idx > 0)
-                        maze_building = true;
+                        }
+                        break;
                 }
             }
+            // 再描写
+            this.stage.ctx.clearRect(0, 0, 510, 510);
             for (var i = 0; i < this.maze_rooms; i++) {
                 this.maze[i].buildRoom();
             }
+            window.requestAnimationFrame(this.mazeBuilding.bind(this));
         };
         Main.prototype.clustering = function (val1, val2) {
             var idx_min = Math.min(val1, val2);
@@ -175,6 +166,9 @@ var maze;
                 this.ctx.lineTo(this.px, this.py);
             }
             // this.ctx.fillText(this.idx, this.px, this.py);
+            // this.ctx.fillStyle = "rgb("+ this.idx +","+ this.idx +","+ this.idx +")";
+            // this.ctx.fillRect(this.px, this.py, this.unit, this.unit);
+            this.ctx.strokeStyle = "rgb(0, 0, 0)";
             this.ctx.stroke();
         };
         return Room;
