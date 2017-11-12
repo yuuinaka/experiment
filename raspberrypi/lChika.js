@@ -1,12 +1,12 @@
 
+const fs = require('fs');
+const path = require('path');
+
 const lChika = {};
 
 lChika.light = (pin, len) => {
 
   console.log('lChika lighting...', pin, len);
-
-  const fs = require('fs');
-  const path = require('path');
 
   const dir = '/sys/class/gpio/';
   const gpio = path.join(dir, 'gpio' + pin);

@@ -12,10 +12,10 @@ else
 fi
 
 # Setup the GPIO port for the LED
-if [ ! -e /sys/class/gpio/gpio27 ]; then
-  sudo echo "27" > /sys/class/gpio/export
+if [ ! -e /sys/class/gpio/gpio26 ]; then
+  sudo echo "26" > /sys/class/gpio/export
 fi
-cd /sys/class/gpio/gpio27
+cd /sys/class/gpio/gpio26
 sudo echo "out" > direction
 
 # Perform L-chika
@@ -29,5 +29,5 @@ while [ $cnt -lt $num ]; do
 done
 
 # Close the GPIO port
-sudo echo 27 > /sys/class/gpio/unexport
+sudo echo 26 > /sys/class/gpio/unexport
 

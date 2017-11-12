@@ -1,5 +1,6 @@
 
-const lChika = require('lChika');
+const lChika = require('./lChika');
 
-lChika.light(27, 5000);
+//lChika.light(4, 3000);
+lChika.light(26, 3000);
 
