@@ -1,0 +1,23 @@
+<script>
+
+  let result = 0; // %
+  let loop = 1000000; // 試行回数 
+
+  let block = [0, 0, 0]; // dqrのマス目
+
+  let i = 0;
+  while(i < loop){
+    block = [0, 0, 0];
+    for(let j = 0; j < 7; j++){
+      let hit = Math.floor(Math.random() * 3);
+      block[hit]++;
+    }
+    //console.log(block);
+    if (block[0] >= 2 && block[1] >= 2 && block[2] >= 2){
+      result++;
+    }
+    i++;
+  }
+  console.log(result / (loop / 100)  + "%");
+</script>
+
