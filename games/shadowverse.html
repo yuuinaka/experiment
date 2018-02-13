@@ -1,0 +1,24 @@
+<script>
+  let result = 0; // %
+  let loop = 1000000; // 試行回数 
+
+  let card = [1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10 ]; // カードのコスト
+
+  let i = 0;
+  while(i < loop){
+    for(let j = 0; j < 9; j++){
+      let r = Math.floor(Math.random() * card.length);
+      let cost = card.splice(r, 1);
+      //console.log(card.length, cost, card);
+      if (cost == 2) {
+        //console.log("2!");
+        result++;
+        break;
+      }
+    }
+    card = [1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10 ];
+    i++;
+  }
+  console.log(result / (loop / 100)  + "%");
+</script>
+
