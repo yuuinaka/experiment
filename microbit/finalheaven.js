@@ -15,6 +15,7 @@ input.onButtonPressed(Button.B, () => {
 });
 
 input.onButtonPressed(Button.AB, () => {
+  basic.showString("FinalHeaven!");
   hits = 3;
 });
 
