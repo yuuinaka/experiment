@@ -7,10 +7,10 @@ set shiftwidth=4
 set backspace=2
 colorscheme murphy
 
-set directory=$HOME/./vim/swap//
+set noswapfile
 
 set undofile
-if !indirectory(expan("$HOME/.vim/undodir"))
+if !isdirectory(expand("$HOME/.vim/undodir"))
     call mkdir(expand("$HOME/.vim/undodir"), "p")
 endif
 set undodir=$HOME/.vim/undodir
