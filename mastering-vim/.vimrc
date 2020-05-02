@@ -33,3 +33,13 @@ set wildmode=list:longest,full
 set number
 
 set hlsearch
+
+set laststatus=2
+set showcmd
+
+"alt ESC
+inoremap <silent> jj <ESC>
+inoremap <silent> kk <ESC>
+
+set clipboard=unnamed,autoselect
+
